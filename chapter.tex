@@ -1,0 +1,205 @@
+%------------------------------------------------------------------------------
+\chapter{Assignment}
+\label{sec:internship01.assignment}
+%------------------------------------------------------------------------------
+\section{Flying start}
+\label{sec:internship01.assignment.flyingstart}
+%------------------------------------------------------------------------------
+The shortest introduction can be found in the flyer:
+!.../procts/internship07/tgt/doc/flyer.pdf!,
+but you've probably seen this already as it was the flyer that referred to this
+assignment document for additional details.
+
+cppmake is a fundamental part of the `flying start' concept. By executing the
+!.../procts/flying_start/*/internship07.exe! you've had a demonstration of this
+concept: without any assumptions about any tooling on your computer, `flying
+start' provides you a complete build environment, it provides all sources, it
+proves that these sources can be build in this build environment, proves that
+all tests succeed on your platform and provides you with all the documents
+you need to understand your assignment. Currently, you are reading the entry
+document of your assignment.
+
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[height=5cm]{../../../share000/ext/fig/sailboat.eps}
+    \end{center}
+    \caption{In sailing races, a `flying start' is a start in which the 
+	         competitors are moving when they pass the starting line; they don't
+			 need to accelerate at the start}
+\end{figure}
+
+`Flying start' targets projects where a product owner invites to tender for 
+(software) construction contracts. Potential contractors need to understand
+scope, size, risk and fit before they can make a sensible effort estimation.
+Note that effort estimation remains a key differentiator, also for scrum
+based projects. Flying start provides a complete overview in a matter of
+minutes; understanding scope, size, risk and fit will still require study,
+of coarse. Please note that the contractors can work in their own preferred
+operating system, their own hardware, using their own preferred tools. As
+long as they finally deliver in git and do not break the `flying start'
+concept. Please also note, that `flying start' provides implicitly a
+continuous integration solution. The constractor can decide to use it on
+a daily bases; the product owner will certainly use it on sprint bases,
+during the sprint review, e.g. to visualize regression.
+
+Another application of `flying start' is in C++ trainings. The trainees
+can get a complete build environment, training slides, and a git archive to
+practice with, in a matter of minutes. The trainees can use their own
+computer, their own operating system and their preferred integrated
+developoment environment.
+
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[height=5cm]{../../../share000/ext/fig/chicken.eps}
+		\hspace{2cm}
+        \includegraphics[height=2cm]{../../../share000/ext/fig/egg.eps}
+    \end{center}
+    \caption{Chicken or the egg causality dilemma}
+\end{figure}
+
+The `flying start' implementation faces several `chicken or the egg'-like
+challenges:
+\begin{itemize}
+\item Fetching git itself from a git repository without having git
+\item Building cppmake itself with cppmake (and C++)
+\item Building makefile.dll (which contains the compiled build expressions) 
+      using makefile.dll
+\end{itemize}
+Wrong design decisions may break the sensitive solutions for above mentioned 
+`chicken or the egg'-like challenges. Therefore it is required to develop
+cppmake within the `flying start', and not in isolation, to detect such wrong
+design decisions in an early stage. Or in other words, cppmake is constrained
+by the `flying start' concept.
+
+%------------------------------------------------------------------------------
+\section{cppmake}
+\label{sec:internship01.assignment.cppmake}
+%------------------------------------------------------------------------------
+By executing the !.../procts/flying_start/*/internship07.exe! it seemed as
+if `flying start' is already complete. But unfortunatelly a poor man's
+solution of building is implemented, based on Windows command line 
+scripts. Such scripts are difficult to maintain, hard to debug, platform
+dependent and not efficient for e.g. incremental builds or parallel 
+builds. These fundamental problems are to be solved with cppmake, which is just
+a library written in standard C++.
+
+See appendix~\ref{sec:share000.cppmake} for the initial design of cppmake. You
+will notice that certain parts are already worked out in detail, and other parts
+are deliberately open. You will start with programming the worked-out parts and
+after having built up some experience, you will also participate in design.
+
+It is not necesary to finish cppmake in a single internship; on the other hand
+it is expected that several features (as listed in the product backlog) reach
+the `completed' state. Picking up too many features and finishing none should
+be avoided. Please note that the product owner is also interested in completed
+features, not only in research findings.
+
+%------------------------------------------------------------------------------
+\section{Way of working}
+\label{sec:internship01.assignment.wayofworking}
+%------------------------------------------------------------------------------
+
+\subsection{Freedom}
+
+One of the intentions of `flying start', including cppmake, is that the SW
+supplier can choose his/her own tools and way of working. This freedom is limited
+in the sense that at the end of every sprint, progress is to be shown by
+using the `flying start', respecting the policy of `flying start' at delivery.
+For `flying start' itself it should be a target to provide only a basic 
+environment, so that suppliers have maximum freedom. This freedom is asumed to be
+benificial, as it is assumed that the supplier is a specialist which will use his
+freedom for finding the best appoach in a maximized solution space. So also as a 
+developer of cppmake, you can enjoy this freedom.
+
+In the following sections the policy of `flying start' is explained.
+
+\subsection{procts}
+
+The !flying_start! directory (which contains the executables that fetch the 
+repositories and build) is required to reside in a !procts! directory. The
+\underline{procts} directory is intended to contain all 
+`\underline{pro}je\underline{cts}' and `\underline{pro}du\underline{cts}'.
+This implicitly explains the name of the !procts! directory. Whenever you 
+start a complete new project or product you shall not invent a new name for 
+!procts!, instead you will create a new subdirectory.
+
+The repository !share000! is intended to contain basic shared content for your
+projects and products. It contains git, C++ compilers, cppmake and a subset of TexLive.
+In case you have several projects or products which share some code, then it is
+strongly adviced to add an additional shared project/product instead of
+extending !share000!.
+
+In other cases, a product owner may no longer agree with (parts of) the !share000! 
+solution. In such cases the product owner can create his/her own 
+replacement and call it !share001!. Every generation of code can have its own
+!share???! and here we assume that the timespan between generations it typically 
+larger then one year. Now legacy code can be maintained in its original context 
+using original policies and original tools. It is up to product owner when and how
+to phase out legace code; the `flying start' concept does not enforce such decision.
+
+Due to the !procts! policy, the cppmake product can safely assume that sibling stem
+repositories can be reached through relative paths via !procts!. So it equally important
+that relative pathes to !procts! remains unchanged. So also the !share000! stem
+repository can be used for e.g.: cppmake, related interfaces, compilers, libraries,
+etc. This allows us to reuse !share000! without having all depending projects and 
+products in the same stem repository. On the other hand, all (shared) products and
+projects will often reside in the same archive 
+(see section~\ref{sec:share000.git.introduction} for definition of `archive').
+
+\subsection{Scrum}
+
+See appendix~\ref{sec:share000.scrumguide} for the scrum guide and 
+appendix~\ref{sec:internship07.productbacklog} for the product backlog.
+It is expected that you will maintain the sprint backlog yourself. The
+source of the sprint backlog can be found in 
+!.../procts/internship07/comp/doc_sprint_backlog!
+
+\subsection{C++}
+
+See !.../procts/share000/ext/doc/std_c++! about the applicable C++ standard \cite{CPP}.
+
+\subsection{git}
+
+For archiving we use git with submodules. Appendix~\ref{sec:share000.git} is a git
+reference in the making. As it is copied of a former project, the the content is
+often not applicable.
+
+Whenever you broke the `flying start' !flying_start_internship07.exe!, it is no
+longer working, you lost all working copies, then you can still download !internship07!
+from stem repository !3ebd95cdd0254d19b853347d0c8798bf!. You will find all other
+stem repositories that !internship07! depends on in the file
+!.../procts/internship07/comp/flying_start/flying_start.cpp!.
+
+The current `flying start' set-up supports the following archives:
+\begin{description}
+\item[github using https] Handy for internships, because future participants can reach
+    the complete archive, before they contact the product owner.
+\item[(github) ssh] Intended for projects at companies
+\item[usb] Intended for C++ trainings where every trainee has its own archive without
+    the need of a network.
+\end{description}
+
+\subsection{LaTeX and UML}
+
+A LaTeX reference is added in appendix~\ref{sec:share000.latex}, but the content is 
+also outdated. So do not take the details to serious, yet.
+
+Appendix~\ref{sec:internship07.uml} about UML is still completely empty.
+
+\subsection{Thesis and storage}
+
+When you would like to write your thesis using LaTeX in this `flying start'
+context, then you can use the !.../procts/internship07/comp/doc_making_cppmake!
+environment. This can be handy, because then you can easilly borrow texts and
+appendixes from the `flying start' context.
+
+When you would like to store all kind of try-out programs, texts, drawings or
+presentation, then you can store them under
+!.../procts/internship07/comp/scratch!.
+
+\subsection{Incompleteness and focus}
+
+As you may already have noticed, many more aspects, besides ccpmake, are 
+incomplete, inaccurate or missing. The product owner gave highest priority
+to the missing cppmake and wishes focus on cppmake first. Other aspects are
+of later concern.
